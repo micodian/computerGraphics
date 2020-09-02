@@ -1,6 +1,9 @@
 var gl;
 var points;
 
+
+
+
 window.onload = function init() {
     var canvas = document.getElementById("gl-canvas");
 
@@ -8,16 +11,14 @@ window.onload = function init() {
     if(!gl){
         alert("WebGL isnt available");
     }
-} 
-//four Vertices
-
+    
+ //four Vertices
 var vertices = [
     vec2(-0.5,-0.5),
     vec2(-0.5,0.5),
     vec2(0.5,0.5),
     vec2(0.5,-0.5)
 ];
-
 //configure WebGL
 
 gl.viewport(0,0,canvas.width,canvas.height);
@@ -36,3 +37,13 @@ gl.bufferData(gl.ARRAY_BUFFER, flatten(vertices),gl.STATIC_DRAW);
 var vPosition = gl.getAttribLocation(program, "vPosition");
 gl.vertexAttribPointer(vPosition,2,gl.FLOAT,false,0,0);
 gl.enableVertexAttribArray(vPosition);
+
+
+render();
+
+};
+
+function render(){
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.drawArrays(gl.TRIANGLE_FAN,0,4);
+}
