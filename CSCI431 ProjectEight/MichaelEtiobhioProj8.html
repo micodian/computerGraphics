@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+    <h3>Use Slider to change direction and speed simultaneously. Hover your mouse over each text for more details</h3>
+
+
+
+    <div class="slidecontainer">
+        <input type="range" min="0" max="100" value="50" step="10" class="slider" id="myRangeX">
+        <span title="This slider changes the direction in the xAxis While also changing the speed">X-Direction</span> 
+    </div>
+    
+    <div class="slidecontainer">
+        <input type="range" min="0" max="100" value="50" step="10" class="slider" id="myRangeY">
+        <span title="This slider changes the direction in the yAxis While also changing the speed">Y-Direction</span>
+    </div>
+    
+    <div class="slidecontainer">
+        <input type="range" min="0" max="100" value="50" step="10" class="slider" id="myRangeZ">
+        <span title="This slider changes the direction in the zAxis While also changing the speed">Z-Direction</span>
+    </div>
+    
+    <button id = "TDButton"> <span title="Use this button to toggle the image">Toggle</span> </button>
+
+<script id="vertex-shader" type="x-shader/x-vertex">
+
+attribute  vec4 vPosition;
+attribute  vec4 vColor;
+attribute  vec2 vTexCoord;
+
+varying vec4 fColor;
+varying vec2 fTexCoord;
+
+uniform vec3 theta;
+
+void main() 
+{
+    // Computing the sines and cosines
+    
+    vec3 angles = radians( theta );
+    vec3 c = cos( angles );
+    vec3 s = sin( angles );
+
+    
+    mat4 px = mat4( 1.0,  0.0,  0.0, 0.0,
+		    0.0,  c.x,  s.x, 0.0,
+		    0.0, -s.x,  c.x, 0.0,
+		    0.0,  0.0,  0.0, 1.0 );
+
+    mat4 py = mat4( c.y, 0.0, -s.y, 0.0,
+		    0.0, 1.0,  0.0, 0.0,
+		    s.y, 0.0,  c.y, 0.0,
+		    0.0, 0.0,  0.0, 1.0 );
+
+
+    mat4 pz = mat4( c.z, -s.z, 0.0, 0.0,
+		    s.z,  c.z, 0.0, 0.0,
+		    0.0,  0.0, 1.0, 0.0,
+		    0.0,  0.0, 0.0, 1.0 );
+
+    fColor = vColor;
+    fTexCoord = vTexCoord;
+    gl_Position = pz * py * px * vPosition;
+} 
+</script>
+
+<script id="fragment-shader" type="x-shader/x-fragment">
+
+precision mediump float;
+
+varying vec4 fColor;
+varying  vec2 fTexCoord;
+
+uniform sampler2D Tex0;
+uniform sampler2D Tex1;
+
+void
+main()
+{
+    gl_FragColor = fColor*(texture2D(Tex0, fTexCoord)*texture2D(Tex1, fTexCoord));
+
+}
+</script>
+
+<script type="text/javascript" src="../Common/webgl-utils.js"></script>
+<script type="text/javascript" src="../Common/initShaders.js"></script>
+<script type="text/javascript" src="../Common/MV.js"></script>
+<script type="text/javascript" src="MichaelEtiobhioProjectEight.js"></script>
+
+<body>
+<canvas id="gl-canvas" width="1024" height="1024">
+Oops ... your browser doesn't support the HTML5 canvas element
+</canvas>
+
+
+</body>
+
+</html>
